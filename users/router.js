@@ -16,7 +16,7 @@ router.get("/users", restrict(), async (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
 	try {
-		const { username, password, department } = req.body
+		const { username, password } = req.body
 		const user = await Users.findBy({ username }).first()
 
 		if (user) {
@@ -29,7 +29,6 @@ router.post("/register", async (req, res, next) => {
 			username,
 			// hash the password with a time complexity of "14"
 			password: await bcrypt.hash(password, 14),
-			department
 		})
 
 		res.status(201).json(newUser)
@@ -78,9 +77,41 @@ router.post("/login", async (req, res, next) => {
 	}
 })
 
-router.get("/logout", async (req, res, next) => {
-    res.clearCookie("token");
-    res.send("cookie has been eaten")
+router.get('/logout', (req, res) => {
+    if(req.header.token){
+        req.header.token.destroy(err => {
+            if(err){
+                res.status(500).json({ message: "Failed to logout"})
+            } else {
+                res.status(200).json({ message: "You have successfully logged out"})
+            }
+        })
+    } else {
+        res.status(200).json({ message: "You have successfully logged out"})
+    }
+})
+
+router.get("/potluck/:id", async (req, res, next) => {
+	try {
+		const user = await Users.potluckByUser(req.params.id)
+		if (!user) {
+			return res.status(404).json({
+				message: "user not found",
+			})
+		}
+		res.json(user)
+	} catch(err) {
+		next(err)
+	}
+})
+
+router.get("/potlucks", async (req, res, next) => {
+    try {
+        const potlucks = await Users.potlucks()
+        res.json(potlucks)
+    } catch(err) {
+        next(err)
+    }
 })
 
 module.exports = router
