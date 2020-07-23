@@ -8,6 +8,9 @@ https://backend-bw.herokuapp.com/
 | ------- | --- | ----------- |
 | POST | /register | register as a new user |
 | POST | /login | login as an existing user |
+| POST | /potluck | add a new potluck to the database |
+| PUT | /potluck | update existing potluck in the database |
+| DELETE | /potluck | deletes existing potluck in the database |
 | GET | /users | get a list of all users (must be logged in) |
 | GET | /potlucks | get a list of all potlucks |
 | GET | /potluck/:id | get a list of potlucks user (id) belongs too |
