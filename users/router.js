@@ -6,6 +6,9 @@ const restrict = require("../middleware/restrict")
 
 const router = express.Router()
 
+
+// USERS 
+
 router.get("/users", restrict(), async (req, res, next) => {
 	try {
 		res.json(await Users.find())
@@ -92,6 +95,8 @@ router.get("/logout", (req, res) => {
     }
 })
 
+// POTLUCKS
+
 router.get("/potluck/:id", validatePotluckId, restrict(), async (req, res, next) => {
 	try {
 		const user = await Users.potluckByUser(req.params.id)
@@ -152,10 +157,35 @@ router.delete("/potluck/:id", validatePotluckId, restrict(), (req, res, next) =>
 		.catch(next)
 });
 
-//custom middleware
+// GUESTS
+
+router.get("/guests", restrict(), async (req, res, next) => {
+    try {
+        const guests = await Users.getGuests()
+        res.json(guests)
+    } catch(err) {
+        next(err)
+    }
+})
+
+router.post("/addGuest/:pid", restrict(), validateGuestData,  (req, res) => {
+	const pid = req.params.pid
+    const guestInfo = { ...req.body, potluck_id: pid }
+
+    Users.addGuest(guestInfo)
+        .then(guest => {
+            res.status(201).json(guest);
+        })
+        .catch(err => {
+            console.log("Error:", err);
+            res.status(500).json({ error: "There was an error adding a guest." })
+        })
+});
+
+// custom middleware
 
 function validatePotluckId(req, res, next) {
-    // do your magic!
+    
     Users.findPotluckById(req.params.id)
         .then(potluck => {
             if (potluck) {
@@ -172,7 +202,7 @@ function validatePotluckId(req, res, next) {
 }
 
 function validateData(req, res, next) {
-    // do your magic!
+    
     if (req.body) {
         if (req.body.name) {
 			next();
@@ -181,6 +211,23 @@ function validateData(req, res, next) {
 		} else if (req.body.time) {
 			next();
 		} else if (req.body.items) {
+			next();
+        } else {
+            res.status(400).json({ message: "a required field is missing." })
+        }
+    } else {
+        res.status(400).json({ message: "Missing post data." });
+    }
+}
+
+function validateGuestData(req, res, next) {
+    
+    if (req.body) {
+        if (req.body.user_id) {
+			next();
+		} else if (req.body.role) {
+			next();
+		} else if (req.body.guest_items) {
 			next();
         } else {
             res.status(400).json({ message: "a required field is missing." })

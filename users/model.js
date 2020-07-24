@@ -1,5 +1,6 @@
 const db = require("../data/config")
 
+// USERS
 async function add(user) {
 	const [id] = await db("users").insert(user)
 	return findById(id)
@@ -39,6 +40,8 @@ function potluckByUser(id) {
 // WHERE p.id = ud.potluck_id
 // AND ud.role = "guest"
 
+// POTLUCKS
+
 function findPotluckById(id) {
 	return db("potluck")
 		.where({ id })
@@ -69,6 +72,21 @@ function deletePotluck(id) {
 		.del()
 }
 
+// GUESTS
+
+function getGuests() {
+	return db("user_data as ud")
+		.where("ud.role", "guest")
+}
+
+function addGuest(guestInfo) {
+	return db("user_data")
+		.insert(guestInfo)
+		.then(ids => {
+			return findPotluckById(ids[0])
+		})
+}
+
 module.exports = {
 	add,
 	find,
@@ -80,4 +98,6 @@ module.exports = {
 	findPotluckById,
 	updatePotluck,
 	deletePotluck,
+	getGuests,
+	addGuest,
 }
