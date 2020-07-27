@@ -1,15 +1,11 @@
 const express = require('express')
-// const actionRouter = require('./routes/actionsRouter')
-// const projectRouter = require('./routes/projectsRouter')
 const server = express()
-//const cors = require("cors")
+const cors = require("cors")
+const bodyParser = require('body-parser')
 
-//server.use(cors)
+server.use(cors)
 server.use(express.json())
-
-
-// server.use('/api/actions', actionRouter)
-// server.use('/api/projects', projectRouter)
+server.use(bodyParser.json())
 
 
 server.get('/', (req, res) => {
