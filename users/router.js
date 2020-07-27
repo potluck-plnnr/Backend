@@ -9,7 +9,7 @@ const router = express.Router()
 
 // USERS 
 
-router.get("/users", restrict(), async (req, res, next) => {
+router.get("/users", async (req, res, next) => {
 	try {
 		res.json(await Users.find())
 	} catch(err) {
@@ -97,7 +97,7 @@ router.get("/logout", (req, res) => {
 
 // POTLUCKS
 
-router.get("/potluck/:id", validatePotluckId, restrict(), async (req, res, next) => {
+router.get("/potluck/:id", validatePotluckId, async (req, res, next) => {
 	try {
 		const user = await Users.potluckByUser(req.params.id)
 		if (!user) {
@@ -111,7 +111,7 @@ router.get("/potluck/:id", validatePotluckId, restrict(), async (req, res, next)
 	}
 })
 
-router.get("/potlucks", restrict(), async (req, res, next) => {
+router.get("/potlucks", async (req, res, next) => {
     try {
         const potlucks = await Users.potlucks()
         res.json(potlucks)
@@ -120,7 +120,7 @@ router.get("/potlucks", restrict(), async (req, res, next) => {
     }
 })
 
-router.post("/potluck", validateData, restrict(), (req, res) => {
+router.post("/potluck", validateData, (req, res) => {
     const potluckid = req.params.id
     const potluckinfo = {...req.body, id: potluckid }
 
@@ -134,7 +134,7 @@ router.post("/potluck", validateData, restrict(), (req, res) => {
         })
 });
 
-router.put("/potluck/:id", validateData, restrict(), (req, res) => {
+router.put("/potluck/:id", validateData, (req, res) => {
     
     const id = req.params.id
     Users.updatePotluck(id, req.body)
@@ -147,7 +147,7 @@ router.put("/potluck/:id", validateData, restrict(), (req, res) => {
         })
 });
 
-router.delete("/potluck/:id", validatePotluckId, restrict(), (req, res, next) => {
+router.delete("/potluck/:id", validatePotluckId, (req, res, next) => {
 	Users.deletePotluck(req.params.id)
 		.then(() => {
 			res.status(200).json({
@@ -159,7 +159,7 @@ router.delete("/potluck/:id", validatePotluckId, restrict(), (req, res, next) =>
 
 // GUESTS
 
-router.get("/guests", restrict(), async (req, res, next) => {
+router.get("/guests", async (req, res, next) => {
     try {
         const guests = await Users.getGuests()
         res.json(guests)
@@ -168,7 +168,7 @@ router.get("/guests", restrict(), async (req, res, next) => {
     }
 })
 
-router.post("/addGuest/:pid", restrict(), validateGuestData,  (req, res) => {
+router.post("/addGuest/:pid", validateGuestData,  (req, res) => {
 	const pid = req.params.pid
     const guestInfo = { ...req.body, potluck_id: pid }
 
