@@ -9,7 +9,7 @@ const router = express.Router()
 
 // USERS 
 
-router.get("/users", async (req, res, next) => {
+router.get("/users", restrict(), async (req, res, next) => {
 	try {
 		res.json(await Users.find())
 	} catch(err) {
