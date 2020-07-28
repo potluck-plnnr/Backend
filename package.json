@@ -27,6 +27,9 @@
   },
   "scripts": {
     "start": "node index.js",
-    "server": "nodemon index.js"
+    "server": "nodemon index.js",
+    "rollback": "npx knex migrate:rollback",
+    "latest": "npx knex migrate:latest",
+    "seed": "npx knex seed:run"
   }
 }
