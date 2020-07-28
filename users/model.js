@@ -74,6 +74,13 @@ function deletePotluck(id) {
 
 // GUESTS
 
+function findGuestById(id) {
+	return db("user_data as ud")
+		.where("ud.role", "guest")
+		.andWhere({ id })
+		.first()
+}
+
 function getGuests() {
 	return db("user_data as ud")
 		.where("ud.role", "guest")
@@ -100,4 +107,5 @@ module.exports = {
 	deletePotluck,
 	getGuests,
 	addGuest,
+	findGuestById,
 }

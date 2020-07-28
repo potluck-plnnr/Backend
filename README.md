@@ -16,6 +16,7 @@ https://backend-bw.herokuapp.com/
 | GET | /potlucks | get a list of all potlucks |
 | GET | /potluck/:id | get a list of potlucks user (id) belongs too |
 | GET | /guests | get a list of guests with role of guest only |
+| GET | /guest/:id | get guest details by id |
 # Table Requirements
 # users
 | Name | Type | Required | Unique | Notes |

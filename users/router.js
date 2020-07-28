@@ -159,6 +159,20 @@ router.delete("/potluck/:id", validatePotluckId, (req, res, next) => {
 
 // GUESTS
 
+router.get("/guest/:id", async (req, res, next) => {
+	try {
+		const guest = await Users.findGuestById(req.params.id)
+		if (!guest) {
+			return res.status(404).json({
+				message: "guest not found",
+			})
+		}
+		res.json(guest)
+	} catch(err) {
+		next(err)
+	}
+})
+
 router.get("/guests", async (req, res, next) => {
     try {
         const guests = await Users.getGuests()
