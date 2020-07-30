@@ -2,8 +2,14 @@ const db = require("../data/config")
 
 // USERS
 async function add(user) {
-	const [id] = await db("users").insert(user)
+	const [id] = await db("users").insert(user, 'id')
 	return findById(id)
+}
+
+function deleteUser(id) {
+	return db("users")
+		.where({ id })
+		.del()
 }
 
 function find() {
@@ -52,9 +58,9 @@ function potlucks() {
 	return db("potluck")
 }
 
-function addPotluck(potluck) {
-	return db("potluck")
-		.insert(potluck)
+async function addPotluck(potluck) {
+	await db("potluck")
+		.insert(potluck, 'id')
 		.then(ids => {
 			return findPotluckById(ids[0])
 		})
@@ -86,9 +92,9 @@ function getGuests() {
 		.where("ud.role", "guest")
 }
 
-function addGuest(guestInfo) {
-	return db("user_data")
-		.insert(guestInfo)
+async function addGuest(guestInfo) {
+	await db("user_data")
+		.insert(guestInfo, 'id')
 		.then(ids => {
 			return findPotluckById(ids[0])
 		})
@@ -96,6 +102,7 @@ function addGuest(guestInfo) {
 
 module.exports = {
 	add,
+	deleteUser,
 	find,
 	findBy,
 	findById,
