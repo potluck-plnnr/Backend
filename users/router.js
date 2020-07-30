@@ -19,7 +19,7 @@ router.get("/users", restrict(), async (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
 	try {
-		const { username, password, role } = req.body
+		const { username, password } = req.body
 		const user = await Users.findBy({ username }).first()
 
 		if (user) {
@@ -39,6 +39,16 @@ router.post("/register", async (req, res, next) => {
 		next(err)
 	}
 })
+
+router.delete("/user/:id", validatePotluckId, (req, res, next) => {
+	Users.deleteUser(req.params.id)
+		.then(() => {
+			res.status(200).json({
+				message: "The user has been nuked"
+			})
+		})
+		.catch(next)
+});
 
 router.post("/login", async (req, res, next) => {
 	try {
@@ -125,7 +135,8 @@ router.post("/potluck", validateData, (req, res) => {
 
     Users.addPotluck(potluckinfo)
         .then(potluck => {
-            res.status(201).json(potluck);
+			res.status(201).json({potluck,
+			message: `Created potluck successfully`});
         })
         .catch(err => {
             console.log("Error:", err);
@@ -187,7 +198,8 @@ router.post("/addGuest/:pid", validateGuestData,  (req, res) => {
 
     Users.addGuest(guestInfo)
         .then(guest => {
-            res.status(201).json(guest);
+			res.status(201).json({guest,
+			message: "successfully added a guest"});
         })
         .catch(err => {
             console.log("Error:", err);
