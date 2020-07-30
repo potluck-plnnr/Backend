@@ -32,7 +32,6 @@ router.post("/register", async (req, res, next) => {
 			username,
 			// hash the password with a time complexity of "14"
 			password: await bcrypt.hash(password, 14),
-			role,
 		})
 
 		res.status(201).json(newUser)
